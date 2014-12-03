@@ -9,15 +9,17 @@ import br.com.ufu.lsi.preprocess.SentenceNLP;
 public class ComparativeEngine {
 
     public static void main( String... args ) throws Exception {
+        
+        Long init = System.currentTimeMillis();
 
         ComparativeEngine comparativeEngine = new ComparativeEngine();
         
         List< Sentence > sentences = comparativeEngine.loadSentences();
+        //comparativeEngine.removeStopWords( sentences );
         comparativeEngine.postagSentences( sentences );
-        comparativeEngine.removeStopWords( sentences );
         List< Sentence > pivotedSentences = comparativeEngine.pivotSentences( sentences );
         
-        System.out.println( "=== PIVOTED SENTENCES === " );
+        System.out.println( "=== FINAL SENTENCES === " );
         int i = 0;
         for ( Sentence s : pivotedSentences )
             System.out.println( ( i++ ) + "\t" + s );
@@ -25,6 +27,7 @@ public class ComparativeEngine {
         System.out.println( "STATS" );
         System.out.println( "Sentences length = " + sentences.size() );
         System.out.println( "Pivot sent length = " + pivotedSentences.size() );
+        System.out.println( "Time = " + (System.currentTimeMillis() - init) + "ms");
     }
 
     /**

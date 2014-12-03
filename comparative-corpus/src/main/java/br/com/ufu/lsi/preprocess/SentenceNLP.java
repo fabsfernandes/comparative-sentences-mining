@@ -48,8 +48,7 @@ public class SentenceNLP {
         for ( Sentence sentence : sentences ) {
             String text = sentence.getText();
             List< Word > sent = edu.stanford.nlp.ling.Sentence.toUntaggedList( Arrays.asList( text.split( "\\s+" ) ) );
-            TestSentence testSentence = new TestSentence( tagger );
-            List< TaggedWord > taggedWords = testSentence.tagSentence( sent, false );
+            List< TaggedWord > taggedWords = tagger.tagSentence( sent );
             sentence.setTaggedWords( taggedWords );
         }
     }
