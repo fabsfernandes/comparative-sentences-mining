@@ -24,7 +24,7 @@ public class SentenceHandler {
 
     private static int RADIUS = 3;
     
-    private static final List<String> COMPARISON_TAGS = Arrays.asList("JJR", "RBR", "JJS", "RBS");
+    
 
     /**
      * Pivot operations: main generate pivot
@@ -33,7 +33,7 @@ public class SentenceHandler {
      * @return
      * @throws Exception
      */
-    public List< Sentence > generatePivot( List< Sentence > sentences ) throws Exception {
+    public List< Sentence > generatePivot( List< Sentence > sentences, List<String> comparisonTags ) throws Exception {
 
         Properties properties = new Properties();
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream( "keywords" );
@@ -41,14 +41,14 @@ public class SentenceHandler {
 
         List< Sentence > finalSentences = new ArrayList< Sentence >();
         for ( Sentence sentence : sentences ) {
-            List< Sentence > pivotedSentences = getPivotedSentences( sentence, properties );
+            List< Sentence > pivotedSentences = getPivotedSentences( sentence, properties, comparisonTags );
             finalSentences.addAll( pivotedSentences );
         }
 
         return finalSentences;
     }
 
-    public List< Sentence > getPivotedSentences( Sentence originalSentence, Properties properties ) {
+    public List< Sentence > getPivotedSentences( Sentence originalSentence, Properties properties, List<String> comparisonTags ) {
         
         List< Sentence > pivotedSentences = new ArrayList< Sentence >();
         
@@ -59,7 +59,7 @@ public class SentenceHandler {
             String tag = word.tag();
             
             // check keywords
-            if ( properties.containsKey( token ) || COMPARISON_TAGS.contains( tag ) ) {
+            if ( properties.containsKey( token ) || comparisonTags.contains( tag ) ) {
                 
                 Sentence pivotedSentence = buildPivotedSentence( originalSentence, i );
                 pivotedSentences.add( pivotedSentence );
