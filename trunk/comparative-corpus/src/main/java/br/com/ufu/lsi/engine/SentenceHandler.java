@@ -6,24 +6,25 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.SerializationUtils;
 
 import br.com.ufu.lsi.model.Sentence;
-import br.com.ufu.lsi.util.SentenceUtil;
+import edu.stanford.nlp.ling.TaggedWord;
 
 public class SentenceHandler {
 
     /**
      * must be a file formatted as: id sentence <otherattributes>
      */
-    private static final String INPUT_FILE = "/Users/fabiola/Desktop/Trabalho3/datasets/amazon_reviews/mp3_processed_classified.txt";
+    private static final String INPUT_FILE = "/Users/fabiola/Desktop/Trabalho3/datasets/amazon_reviews/mp3_processed_classified_simple.txt";
 
     private static int RADIUS = 3;
+    
+    private static final List<String> COMPARISON_TAGS = Arrays.asList("JJR", "RBR", "JJS", "RBS");
 
     /**
      * Pivot operations: main generate pivot
@@ -47,13 +48,56 @@ public class SentenceHandler {
         return finalSentences;
     }
 
+    public List< Sentence > getPivotedSentences( Sentence originalSentence, Properties properties ) {
+        
+        List< Sentence > pivotedSentences = new ArrayList< Sentence >();
+        
+        for( int i = 0; i < originalSentence.getTaggedWords().size(); i++ ) {
+            
+            TaggedWord word = originalSentence.getTaggedWords().get( i );
+            String token = word.word();
+            String tag = word.tag();
+            
+            // check keywords
+            if ( properties.containsKey( token ) || COMPARISON_TAGS.contains( tag ) ) {
+                
+                Sentence pivotedSentence = buildPivotedSentence( originalSentence, i );
+                pivotedSentences.add( pivotedSentence );
+            } 
+        }
+        
+        return pivotedSentences;
+    }
+    
+    public Sentence buildPivotedSentence( Sentence originalSentence, int tokenPosition ) {
+
+        Sentence pivotedSentence = SerializationUtils.clone( originalSentence );
+        pivotedSentence.getTaggedWords().clear();
+        pivotedSentence.setText( null );
+        
+        int i = ( tokenPosition - RADIUS ) > 0 ? tokenPosition - RADIUS : 0; 
+        for( ; i < tokenPosition; i++ ) {
+            pivotedSentence.getTaggedWords().add( originalSentence.getTaggedWords().get(i) );
+        }
+
+        pivotedSentence.getTaggedWords().add( originalSentence.getTaggedWords().get( tokenPosition ) );
+        
+        
+        int cont = 0;
+        for( i = tokenPosition + 1; cont < RADIUS && i < originalSentence.getTaggedWords().size(); i++, cont++ ) {
+            pivotedSentence.getTaggedWords().add( originalSentence.getTaggedWords().get(i) );
+        }
+        
+        return pivotedSentence;
+    }
+
     /**
      * Pivot operation
      * 
      * @param sentence
      * @param properties
      * @return
-     */
+     *
     public List< Sentence > getPivotedSentences( Sentence sentence, Properties properties ) {
 
         List< Sentence > pivotedSentences = new ArrayList< Sentence >();
@@ -64,6 +108,7 @@ public class SentenceHandler {
 
         for ( String keyword : keywords ) {
 
+            // check manual keywords
             Matcher matcher = Pattern.compile( keyword ).matcher( str );
 
             while ( matcher.find() ) {
@@ -89,15 +134,20 @@ public class SentenceHandler {
                 }
 
                 String sentenceFound = before + keyword + after;
-                Sentence newSentence = SerializationUtils.clone( sentence );
-                newSentence.setText( sentenceFound );
-                pivotedSentences.add( newSentence );
+
+                // build pivoted sentence
+                Sentence pivotedSentence = buildPivotedSentence( sentence, sentenceFound );
+                pivotedSentences.add( pivotedSentence );
             }
+
         }
 
-        return pivotedSentences;
+        // check postag keywords
 
+        return pivotedSentences;
     }
+*/
+    
 
     /**
      * Pivot operation

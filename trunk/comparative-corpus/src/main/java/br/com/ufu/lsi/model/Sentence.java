@@ -38,6 +38,15 @@ public class Sentence implements Serializable {
     }
 
     public String getText() {
+        
+        if( text == null && taggedWords != null ) {
+            String str = "";
+            for( TaggedWord word : taggedWords ) {
+                str += word.word() + " ";
+            }
+            return str;
+        }
+        
         return text;
     }
 
@@ -59,8 +68,8 @@ public class Sentence implements Serializable {
         
         StringBuilder builder = new StringBuilder();
         
-        builder.append( "\t" + reviewId + "\t" + category + "\t" + text );
-        builder.append( "\n" + taggedWords );
+        builder.append( "\t" + reviewId + "\t" + category + "\t" + this.getText() );
+        builder.append( "\t" + taggedWords );
         
         return builder.toString();
     }
