@@ -3,13 +3,11 @@ package br.com.ufu.lsi.preprocess;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
 import br.com.ufu.lsi.model.AmazonReview;
+import br.com.ufu.lsi.util.FileUtil;
 
 public class AmazonReviewPreprocess {
 
@@ -19,23 +17,12 @@ public class AmazonReviewPreprocess {
     
     private static long id = 0;
 
-    public static BufferedWriter openOutputFile() throws Exception {
-        File file = new File( OUTPUT_FILE );
-        FileWriter fw = new FileWriter( file.getAbsoluteFile() );
-        BufferedWriter bw = new BufferedWriter( fw );
-        return bw;
-    }
-
-    public static BufferedReader openInputFile() throws Exception {
-        BufferedReader br = new BufferedReader( new FileReader( INPUT_FILE ) );
-        return br;
-    }
-
+    
     public static void main( String... args ) throws Exception {
 
-        BufferedWriter bw = openOutputFile();
+        BufferedWriter bw = FileUtil.openOutputFile( OUTPUT_FILE );
 
-        BufferedReader br = openInputFile();
+        BufferedReader br = FileUtil.openInputFile( INPUT_FILE );
 
         try {
 

@@ -1,12 +1,17 @@
 
 package br.com.ufu.lsi.engine;
 
+import java.util.Arrays;
 import java.util.List;
 
+import br.com.ufu.lsi.mining.CSRFormatter;
+import br.com.ufu.lsi.mining.ClassSequentialRule;
 import br.com.ufu.lsi.model.Sentence;
 import br.com.ufu.lsi.preprocess.SentenceNLP;
 
 public class ComparativeEngine {
+    
+    private static final List<String> COMPARISON_TAGS = Arrays.asList("JJR", "RBR", "JJS", "RBS");
 
     public static void main( String... args ) throws Exception {
         
@@ -18,18 +23,15 @@ public class ComparativeEngine {
         //comparativeEngine.removeStopWords( sentences );
         comparativeEngine.postagSentences( sentences );
         List< Sentence > pivotedSentences = comparativeEngine.pivotSentences( sentences );
+        comparativeEngine.generateSequences( pivotedSentences );
         
-        System.out.println( "=== FINAL SENTENCES === " );
-        int i = 0;
-        for ( Sentence s : pivotedSentences )
-            System.out.println( ( i++ ) + "\t" + s );
+        printResults( sentences, pivotedSentences, init );
         
-        System.out.println( "STATS" );
-        System.out.println( "Sentences length = " + sentences.size() );
-        System.out.println( "Pivot sent length = " + pivotedSentences.size() );
-        System.out.println( "Time = " + (System.currentTimeMillis() - init) + "ms");
+        
     }
 
+    
+    
     /**
      * Load sentences from file
      * 
@@ -63,7 +65,7 @@ public class ComparativeEngine {
      */
     public List< Sentence > pivotSentences( List< Sentence > sentences ) throws Exception {
         SentenceHandler generator = new SentenceHandler();
-        List< Sentence > pivotedSentences = generator.generatePivot( sentences );
+        List< Sentence > pivotedSentences = generator.generatePivot( sentences, COMPARISON_TAGS );
 
         return pivotedSentences;
     }
@@ -79,4 +81,33 @@ public class ComparativeEngine {
     }
 
     // generate sequences
+    public void generateSequences( List<Sentence> sentences ) throws Exception {
+        
+        CSRFormatter formatter = new CSRFormatter();
+        List<ClassSequentialRule> rules = formatter.convertSentenceToCSR( sentences );
+        formatter.convertCSRToPrefixSpanFormat( rules, COMPARISON_TAGS );
+        
+        
+    }
+    
+    
+    /**
+     * Just print for debug purposes
+     * 
+     * @param sentences
+     * @param pivotedSentences
+     * @param init
+     */
+    public static void printResults( List<Sentence> sentences, List<Sentence> pivotedSentences, long init ) {
+        
+        System.out.println( "=== FINAL SENTENCES === " );
+        int i = 0;
+        for ( Sentence s : pivotedSentences )
+            System.out.println( ( i++ ) + "\t" + s );
+        
+        System.out.println( "STATS" );
+        System.out.println( "Sentences length = " + sentences.size() );
+        System.out.println( "Pivot sent length = " + pivotedSentences.size() );
+        System.out.println( "Time = " + (System.currentTimeMillis() - init) + "ms");
+    }
 }
