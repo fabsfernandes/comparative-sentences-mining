@@ -4,12 +4,13 @@ package br.com.ufu.lsi.engine;
 import java.util.Arrays;
 import java.util.List;
 
-import br.com.ufu.lsi.mining.CSRFormatter;
-import br.com.ufu.lsi.mining.ClassSequentialRule;
+import br.com.ufu.lsi.csr.CSRFormatter;
+import br.com.ufu.lsi.csr.ClassSequentialRule;
 import br.com.ufu.lsi.model.Sentence;
-import br.com.ufu.lsi.preprocess.SentenceNLP;
+import br.com.ufu.lsi.sentence.SentenceHandler;
+import br.com.ufu.lsi.sentence.SentenceNLP;
 
-public class ComparativeEngine {
+public class SequenceBuilder {
     
     private static final List<String> COMPARISON_TAGS = Arrays.asList("JJR", "RBR", "JJS", "RBS");
 
@@ -17,7 +18,7 @@ public class ComparativeEngine {
         
         Long init = System.currentTimeMillis();
 
-        ComparativeEngine comparativeEngine = new ComparativeEngine();
+        SequenceBuilder comparativeEngine = new SequenceBuilder();
         
         List< Sentence > sentences = comparativeEngine.loadSentences();
         //comparativeEngine.removeStopWords( sentences );

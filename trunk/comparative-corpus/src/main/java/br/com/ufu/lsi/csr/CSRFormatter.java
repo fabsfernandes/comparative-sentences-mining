@@ -1,4 +1,4 @@
-package br.com.ufu.lsi.mining;
+package br.com.ufu.lsi.csr;
 
 import java.io.BufferedWriter;
 import java.util.ArrayList;
@@ -68,8 +68,10 @@ public class CSRFormatter {
                     tag = word.word() + tag;
                 }
                 bw.write( codes.get( tag ) + " -1 ");
+                System.out.print( tag + "\t" );
             }
             bw.write( "-2\n" );
+            System.out.println( rule.getCategory() );
         }
         bw.close();
         
