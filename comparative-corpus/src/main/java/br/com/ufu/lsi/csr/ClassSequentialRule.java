@@ -1,4 +1,4 @@
-package br.com.ufu.lsi.mining;
+package br.com.ufu.lsi.csr;
 
 import java.util.List;
 

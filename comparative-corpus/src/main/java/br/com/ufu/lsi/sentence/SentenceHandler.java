@@ -1,5 +1,5 @@
 
-package br.com.ufu.lsi.engine;
+package br.com.ufu.lsi.sentence;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -193,7 +193,7 @@ public class SentenceHandler {
                         Sentence sentence = new Sentence();
                         sentence.setReviewId( Long.parseLong( tokens[ 0 ] ) );
                         sentence.setCategory( tokens[ 1 ] );
-                        sentence.setText( tokens[ 2 ] );
+                        sentence.setText( tokens[ 2 ].toLowerCase() );
                         sentences.add( sentence );
                     } catch ( NumberFormatException e ) {
                         // does nothing

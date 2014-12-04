@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 import br.com.ufu.lsi.model.AmazonReview;
+import br.com.ufu.lsi.sentence.HeavySentenceNLP;
 import br.com.ufu.lsi.util.FileUtil;
 
 public class AmazonReviewPreprocess {

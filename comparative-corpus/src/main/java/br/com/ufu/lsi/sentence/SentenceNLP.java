@@ -1,5 +1,5 @@
 
-package br.com.ufu.lsi.preprocess;
+package br.com.ufu.lsi.sentence;
 
 import java.io.StringReader;
 import java.util.Arrays;
