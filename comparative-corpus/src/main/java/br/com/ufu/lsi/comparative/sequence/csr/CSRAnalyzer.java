@@ -4,7 +4,6 @@ package br.com.ufu.lsi.comparative.sequence.csr;
 import java.util.List;
 
 import br.com.ufu.lsi.comparative.model.Sentence;
-import br.com.ufu.lsi.comparative.util.FileUtil;
 import br.com.ufu.lsi.comparative.util.PropertiesUtil;
 
 public class CSRAnalyzer {

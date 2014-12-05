@@ -16,7 +16,6 @@ import br.com.ufu.lsi.comparative.model.Sentence;
 import edu.stanford.nlp.ling.TaggedWord;
 import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
-import edu.stanford.nlp.tagger.maxent.TestSentence;
 
 public class SentenceNLP {
 
@@ -27,7 +26,7 @@ public class SentenceNLP {
             StandardAnalyzer ana = new StandardAnalyzer( Version.LUCENE_30 );
             TokenStream tokenStream = new StandardTokenizer( Version.LUCENE_36, new StringReader( sentence.getText() ) );
             StringBuilder sb = new StringBuilder();
-            tokenStream = new StopFilter( Version.LUCENE_36, tokenStream, ana.STOP_WORDS_SET );
+            tokenStream = new StopFilter( Version.LUCENE_36, tokenStream, StandardAnalyzer.STOP_WORDS_SET );
             CharTermAttribute token = tokenStream.getAttribute( CharTermAttribute.class );
 
             while ( tokenStream.incrementToken() ) {
@@ -38,6 +37,9 @@ public class SentenceNLP {
             }
 
             sentence.setText( sb.toString() );
+            
+            ana.close();
+            tokenStream.close();
         }
     }
 
