@@ -1,5 +1,5 @@
 
-package br.com.ufu.lsi.model;
+package br.com.ufu.lsi.comparative.model;
 
 import java.util.List;
 

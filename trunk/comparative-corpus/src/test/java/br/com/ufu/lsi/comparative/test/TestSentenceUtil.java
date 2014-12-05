@@ -1,5 +1,5 @@
 
-package br.com.ufu.lsi.test;
+package br.com.ufu.lsi.comparative.test;
 
 import java.io.StringReader;
 
@@ -11,7 +11,7 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
 import org.junit.Test;
 
-import br.com.ufu.lsi.util.SentenceUtil;
+import br.com.ufu.lsi.comparative.util.SentenceUtil;
 
 public class TestSentenceUtil {
 

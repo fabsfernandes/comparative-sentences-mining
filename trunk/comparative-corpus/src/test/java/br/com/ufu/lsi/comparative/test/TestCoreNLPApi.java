@@ -1,4 +1,4 @@
-package br.com.ufu.lsi.test;
+package br.com.ufu.lsi.comparative.test;
 
 import java.io.BufferedReader;
 import java.io.File;

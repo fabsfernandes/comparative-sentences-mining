@@ -1,4 +1,4 @@
-package br.com.ufu.lsi.util;
+package br.com.ufu.lsi.comparative.util;
 
 import java.text.BreakIterator;
 import java.util.ArrayList;
