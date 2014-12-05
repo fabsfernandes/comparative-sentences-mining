@@ -1,4 +1,4 @@
-package br.com.ufu.lsi.model;
+package br.com.ufu.lsi.comparative.model;
 
 import java.io.Serializable;
 import java.util.List;

@@ -1,3 +1,4 @@
 - Review stopwords list: remove as, but, not, ...
 - Review keywords list: rethink about it
 - Do some tests with larger RADIUS
+- Fix bug for keywords with more than 1 word

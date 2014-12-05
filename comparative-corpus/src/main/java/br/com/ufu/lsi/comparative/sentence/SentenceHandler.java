@@ -1,18 +1,18 @@
 
-package br.com.ufu.lsi.sentence;
+package br.com.ufu.lsi.comparative.sentence;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.lang3.SerializationUtils;
 
-import br.com.ufu.lsi.model.Sentence;
+import br.com.ufu.lsi.comparative.model.Sentence;
+import br.com.ufu.lsi.comparative.util.PropertiesUtil;
 import edu.stanford.nlp.ling.TaggedWord;
 
 public class SentenceHandler {
@@ -20,9 +20,9 @@ public class SentenceHandler {
     /**
      * must be a file formatted as: id sentence <otherattributes>
      */
-    private static final String INPUT_FILE = "/Users/fabiola/Desktop/Trabalho3/datasets/amazon_reviews/mp3_processed_classified_simple.txt";
+    private static final String INPUT_FILE = PropertiesUtil.getProperty( "INPUT_FILE" );
 
-    private static int RADIUS = 3;
+    private static int RADIUS = PropertiesUtil.getIntProperty( "RADIUS" );
     
     
 

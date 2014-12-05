@@ -1,5 +1,5 @@
 
-package br.com.ufu.lsi.sentence;
+package br.com.ufu.lsi.comparative.sentence;
 
 import java.io.StringReader;
 import java.util.Arrays;
@@ -12,7 +12,7 @@ import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
 
-import br.com.ufu.lsi.model.Sentence;
+import br.com.ufu.lsi.comparative.model.Sentence;
 import edu.stanford.nlp.ling.TaggedWord;
 import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;

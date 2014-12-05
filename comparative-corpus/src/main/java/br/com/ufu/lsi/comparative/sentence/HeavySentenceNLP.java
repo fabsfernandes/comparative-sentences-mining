@@ -1,5 +1,5 @@
 
-package br.com.ufu.lsi.sentence;
+package br.com.ufu.lsi.comparative.sentence;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,38 +1,35 @@
 
-package br.com.ufu.lsi.engine;
+package br.com.ufu.lsi.comparative.sequence.engine;
 
 import java.util.Arrays;
 import java.util.List;
 
-import br.com.ufu.lsi.csr.CSRFormatter;
-import br.com.ufu.lsi.csr.ClassSequentialRule;
-import br.com.ufu.lsi.model.Sentence;
-import br.com.ufu.lsi.sentence.SentenceHandler;
-import br.com.ufu.lsi.sentence.SentenceNLP;
+import br.com.ufu.lsi.comparative.model.Sentence;
+import br.com.ufu.lsi.comparative.sentence.SentenceHandler;
+import br.com.ufu.lsi.comparative.sentence.SentenceNLP;
+import br.com.ufu.lsi.comparative.sequence.csr.CSRFormatter;
+import br.com.ufu.lsi.comparative.sequence.csr.ClassSequentialRule;
 
 public class SequenceBuilder {
-    
-    private static final List<String> COMPARISON_TAGS = Arrays.asList("JJR", "RBR", "JJS", "RBS");
+
+    private static final List< String > COMPARISON_TAGS = Arrays.asList( "JJR", "RBR", "JJS", "RBS" );
 
     public static void main( String... args ) throws Exception {
-        
+
         Long init = System.currentTimeMillis();
 
         SequenceBuilder comparativeEngine = new SequenceBuilder();
-        
+
         List< Sentence > sentences = comparativeEngine.loadSentences();
         //comparativeEngine.removeStopWords( sentences );
         comparativeEngine.postagSentences( sentences );
         List< Sentence > pivotedSentences = comparativeEngine.pivotSentences( sentences );
         comparativeEngine.generateSequences( pivotedSentences );
-        
+
         printResults( sentences, pivotedSentences, init );
-        
-        
+
     }
 
-    
-    
     /**
      * Load sentences from file
      * 
@@ -81,17 +78,19 @@ public class SequenceBuilder {
         sentenceNLP.tagSentences( sentences );
     }
 
-    // generate sequences
-    public void generateSequences( List<Sentence> sentences ) throws Exception {
-        
+    /**
+     * Generate sequence file
+     * 
+     * @param sentences
+     * @throws Exception
+     */
+    public void generateSequences( List< Sentence > sentences ) throws Exception {
+
         CSRFormatter formatter = new CSRFormatter();
-        List<ClassSequentialRule> rules = formatter.convertSentenceToCSR( sentences );
-        formatter.convertCSRToPrefixSpanFormat( rules, COMPARISON_TAGS );
-        
-        
+        List< ClassSequentialRule > rules = formatter.convertSentenceToCSR( sentences, COMPARISON_TAGS );
+        formatter.convertCSRToPrefixSpanFormat( rules );
     }
-    
-    
+
     /**
      * Just print for debug purposes
      * 
@@ -99,16 +98,17 @@ public class SequenceBuilder {
      * @param pivotedSentences
      * @param init
      */
-    public static void printResults( List<Sentence> sentences, List<Sentence> pivotedSentences, long init ) {
-        
+    public static void printResults( List< Sentence > sentences, List< Sentence > pivotedSentences,
+            long init ) {
+
         System.out.println( "=== FINAL SENTENCES === " );
         int i = 0;
         for ( Sentence s : pivotedSentences )
             System.out.println( ( i++ ) + "\t" + s );
-        
+
         System.out.println( "STATS" );
         System.out.println( "Sentences length = " + sentences.size() );
         System.out.println( "Pivot sent length = " + pivotedSentences.size() );
-        System.out.println( "Time = " + (System.currentTimeMillis() - init) + "ms");
+        System.out.println( "Time = " + ( System.currentTimeMillis() - init ) + "ms" );
     }
 }

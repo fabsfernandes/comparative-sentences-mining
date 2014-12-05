@@ -1,12 +1,10 @@
-package br.com.ufu.lsi.csr;
+package br.com.ufu.lsi.comparative.sequence.csr;
 
 import java.util.List;
 
-import edu.stanford.nlp.ling.TaggedWord;
-
 public class ClassSequentialRule {
     
-    private List<TaggedWord> taggedWords;
+    private List<String> tags;
     
     private String category;
     
@@ -14,12 +12,13 @@ public class ClassSequentialRule {
     
     private double confidence;
 
-    public List< TaggedWord > getTaggedWords() {
-        return taggedWords;
+    
+    public List< String > getTags() {
+        return tags;
     }
 
-    public void setTaggedWords( List< TaggedWord > taggedWords ) {
-        this.taggedWords = taggedWords;
+    public void setTags( List< String > tags ) {
+        this.tags = tags;
     }
 
     public String getCategory() {
@@ -44,6 +43,17 @@ public class ClassSequentialRule {
 
     public void setConfidence( double confidence ) {
         this.confidence = confidence;
+    }
+
+    @Override
+    public String toString() {
+        
+        StringBuilder builder = new StringBuilder();
+        
+        builder.append( "\t" + category + "\t" + support + "\t" + confidence );
+        builder.append( "\t" + tags );
+        
+        return builder.toString();
     }
 
 }

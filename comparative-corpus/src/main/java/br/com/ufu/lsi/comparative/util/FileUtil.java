@@ -1,12 +1,14 @@
 
-package br.com.ufu.lsi.util;
+package br.com.ufu.lsi.comparative.util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class FileUtil {
@@ -41,7 +43,29 @@ public class FileUtil {
 
             e.printStackTrace();
         }
+    }
 
+    public static Object deserializeObject( String file ) {
+
+        try {
+            File f = new File( file );
+
+            FileInputStream out = new FileInputStream( f );
+
+            ObjectInputStream stream = new ObjectInputStream( out );
+
+            Object obj = stream.readObject();
+
+            stream.close();
+            out.close();
+
+            return obj;
+            
+        } catch ( Exception e ) {
+
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

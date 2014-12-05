@@ -1,4 +1,4 @@
-package br.com.ufu.lsi.annotator;
+package br.com.ufu.lsi.comparative.annotator;
 
 import java.util.Collections;
 import java.util.List;
