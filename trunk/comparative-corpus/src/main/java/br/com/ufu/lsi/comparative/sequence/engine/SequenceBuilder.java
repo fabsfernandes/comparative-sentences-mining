@@ -21,7 +21,7 @@ public class SequenceBuilder {
         SequenceBuilder comparativeEngine = new SequenceBuilder();
 
         List< Sentence > sentences = comparativeEngine.loadSentences();
-        //comparativeEngine.removeStopWords( sentences );
+        comparativeEngine.removeStopWords( sentences );
         comparativeEngine.postagSentences( sentences );
         List< Sentence > pivotedSentences = comparativeEngine.pivotSentences( sentences );
         comparativeEngine.generateSequences( pivotedSentences );
