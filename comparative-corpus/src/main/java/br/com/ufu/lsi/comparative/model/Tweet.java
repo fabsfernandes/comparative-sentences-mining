@@ -81,7 +81,13 @@ public class Tweet {
 
     @Override
     public boolean equals( Object obj ) {
-        if ( this == obj )
+        
+        Tweet other = ( Tweet ) obj;
+        if( id == other.id )
+            return true;
+        return false;
+        
+        /*if ( this == obj )
             return true;
         if ( obj == null )
             return false;
@@ -107,7 +113,7 @@ public class Tweet {
                 return false;
         } else if ( ! user.equals( other.user ) )
             return false;
-        return true;
+        return true;*/
     }
 
 }
