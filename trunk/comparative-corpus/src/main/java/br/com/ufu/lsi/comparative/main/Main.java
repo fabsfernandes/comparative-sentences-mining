@@ -23,17 +23,17 @@ public class Main {
         List<Sentence> pivotedSentences = main.buildSentences();
         
         // csr approach
-        //SequenceBuilder sequenceBuilder = new SequenceBuilder();
-        //sequenceBuilder.buildSequences( pivotedSentences );
+        SequenceBuilder sequenceBuilder = new SequenceBuilder();
+        sequenceBuilder.buildSequences( pivotedSentences );
         
         // csr approach part 2
         // run via csrbuilder
 
-        //printResults( pivotedSentences, init  );
+        printResults( pivotedSentences, init  );
         
         // ga approach
-        GARunner runner = new GARunner();
-        runner.runGeneticEngine( pivotedSentences );
+        //GARunner runner = new GARunner();
+        //runner.runGeneticEngine( pivotedSentences );
         
         
 
@@ -42,12 +42,12 @@ public class Main {
     public List<Sentence> buildSentences() throws Exception {
         
         List< Sentence > sentences = loadSentences();
-        removeStopWords( sentences );
+        ;;removeStopWords( sentences );
         postagSentences( sentences );
-       // List< Sentence > pivotedSentences = pivotSentences( sentences );
+        List< Sentence > pivotedSentences = pivotSentences( sentences );
         
-       // return pivotedSentences;
-        return sentences;
+        return pivotedSentences;
+        
     }
     
     
