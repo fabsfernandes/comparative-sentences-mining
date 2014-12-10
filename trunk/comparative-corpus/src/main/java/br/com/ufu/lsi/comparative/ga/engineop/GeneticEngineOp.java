@@ -1,5 +1,5 @@
 
-package br.com.ufu.lsi.comparative.ga.engine;
+package br.com.ufu.lsi.comparative.ga.engineop;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.SerializationUtils;
 
-import br.com.ufu.lsi.comparative.ga.model.CSRDataset;
+import br.com.ufu.lsi.comparative.ga.model.CSRDatasetOp;
 import br.com.ufu.lsi.comparative.ga.model.Chromossome;
 import br.com.ufu.lsi.comparative.ga.model.Gene;
 import br.com.ufu.lsi.comparative.ga.model.Stats;
@@ -15,9 +15,9 @@ import br.com.ufu.lsi.comparative.model.Sentence;
 import br.com.ufu.lsi.comparative.util.PropertiesUtil;
 import br.com.ufu.lsi.comparative.util.RandomGenerator;
 
-public class GeneticEngine {
+public class GeneticEngineOp {
 
-    private static final int POPULATION_SIZE = 50;
+    private static final int POPULATION_SIZE = 30;
 
     private static final int GENERATIONS_NUMBER = 100;
 
@@ -30,18 +30,27 @@ public class GeneticEngine {
     private static final Double INSERTION_RATE = 0.3;
     
     private static final Double REMOVAL_RATE = 0.3;
+
+    private static final String COMPARATIVE_CLASS = PropertiesUtil.getProperty( "COMPARATIVE_CLASS" );
     
-    private static final String NOT_COMPARATIVE_CLASS = PropertiesUtil.getProperty( "NOT_COMPARATIVE_CLASS" );
+    private static final List<String> COMPARISON_TAGS = PropertiesUtil.getListProperty( "COMPARISON_TAGS" );
 
     public List< Chromossome > generateInitialPopulation( List< Sentence > sentences ) {
 
         List< Chromossome > population = new ArrayList< Chromossome >();
+        
+        List<Sentence> compSentences = new ArrayList<Sentence>();
+        for( Sentence cSentence : sentences ) {
+            if( cSentence.getCategory().equals( COMPARATIVE_CLASS ) ) {
+                compSentences.add( cSentence );
+            }
+        }
 
-        for ( int i = 0; i < POPULATION_SIZE; i++ ) {
+        for ( int i = 0, j = 0; i < POPULATION_SIZE; i++ ) {
             Chromossome chromossome = new Chromossome();
 
             //chromossome.setGenes( buildRandomChromossome() );
-            chromossome.setGenes( buildDirectedChromossome(sentences.get(i)) );
+            chromossome.setGenes( buildDirectedChromossome(compSentences.get(j++)) );
 
             if ( ! checkChromossomeIsValid( chromossome ) ) {
                 i-- ;
@@ -74,7 +83,7 @@ public class GeneticEngine {
             eliteSelection( population, children );
 
             System.out.println( "GENERATION ##" + i);
-            GARunner.printPopulation( population );
+            GARunnerOp.printPopulation( population );
         }
     }
 
@@ -89,6 +98,7 @@ public class GeneticEngine {
         Collections.sort( population );
 
         population.subList( POPULATION_SIZE, population.size() ).clear();
+        
     }
 
     public void calculatePopulationFitness( List< Chromossome > population,
@@ -171,7 +181,7 @@ public class GeneticEngine {
 
             String value = genes[ j ].getValue();
             while ( value == genes[ j ].getValue() ) {
-                value = CSRDataset.getPostagValue();
+                value = CSRDatasetOp.getPostagValue();
             }
             genes[ j ].setValue( value );
         }
@@ -251,11 +261,24 @@ public class GeneticEngine {
         Double sensitivity = tp / (tp+fn);
         Double specificity = tn / (tn+fp);
         
-        Double fitness = sensitivity * specificity;
+        Double keyword = containComparisonTag( chromossome ) ? 0.5 : 0.0;
+        
+        Double fitness = (sensitivity * specificity) + keyword;
         
         return fitness;
     }
 
+    public boolean containComparisonTag( Chromossome chromossome ) {
+        
+        for( String str : chromossome.getActiveGenes() ) {
+            str = str.substring( 1 );
+            if( COMPARISON_TAGS.contains( str ) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public Double fitness2( Chromossome chromossome, List< Sentence > sentences ) {
 
         Double antecedent = 0.0;
@@ -374,17 +397,17 @@ public class GeneticEngine {
 
     public Gene[] buildRandomChromossome() {
 
-        Gene[] genes = new Gene[ CSRDataset.ATTRIBUTES_NUMBER ];
+        Gene[] genes = new Gene[ CSRDatasetOp.ATTRIBUTES_NUMBER ];
 
         for ( int i = 0; i < genes.length - 1; i++ ) {
             Gene gene = new Gene();
-            gene.setValue( CSRDataset.getPostagValue() );
+            gene.setValue( CSRDatasetOp.getPostagValue() );
             gene.setIsClass( false );
             genes[ i ] = gene;
         }
         Gene classGene = new Gene();
         classGene.setIsClass( true );
-        classGene.setValue( CSRDataset.getClassValue() );
+        classGene.setValue( CSRDatasetOp.getClassValue() );
         genes[ genes.length - 1 ] = classGene;
 
         return genes;
@@ -392,7 +415,7 @@ public class GeneticEngine {
     
     public Gene[] buildDirectedChromossome( Sentence sentence ) {
         
-        Gene[] genes = new Gene[ CSRDataset.ATTRIBUTES_NUMBER ];
+        Gene[] genes = new Gene[ CSRDatasetOp.ATTRIBUTES_NUMBER ];
         
         for ( int i = 0; i < genes.length - 1; i++ ) {
             Gene gene = new Gene();
@@ -411,20 +434,7 @@ public class GeneticEngine {
         return genes;
     }
     
-    public Chromossome buildEmptyChromossome() {
-        Gene g = new Gene();
-        g.setValue( "0" );
-        g.setIsClass( false );
-        Gene g2 = new Gene();
-        g2.setValue( NOT_COMPARATIVE_CLASS );
-        g2.setIsClass( true );
-        Gene [] genes = new Gene[] { g, g, g, g, g, g, g, g2 };
-        
-        Chromossome chrom = new Chromossome();
-        chrom.setGenes( genes );
-       
-        return chrom;
-    }
+    
 
     public boolean checkChromossomeIsValid( Chromossome chromossome ) {
 
@@ -435,16 +445,14 @@ public class GeneticEngine {
         return false;
     }
     
-    
     public List<Stats> statistics( List< Sentence > testSentences, List< Chromossome > population ) {
 
         List<Stats> listStats = new ArrayList<Stats>();
         
-        population.add( buildEmptyChromossome() );
+        //population.add( buildEmptyChromossome() );
         
-        for ( int i = 0; i < population.size(); i++ ) {
+        for ( int i = 0; i < 1; i++ ) {
             Chromossome chromossome = population.get( i );
-            if( !chromossome.getGenes()[chromossome.getGenes().length-1].getValue().equals( NOT_COMPARATIVE_CLASS ) ) {
             
             Double tp = 0.0;
             Double fp = 0.0;
@@ -464,12 +472,13 @@ public class GeneticEngine {
             }
             Stats stats = new Stats( tp, tn, fp, fn );
             listStats.add( stats );
-            }
         }
         
 
         return listStats;
     }
+
+   
 
 
     public List<Stats> statistics2( List< Sentence > testSentences, List< Chromossome > population ) {
@@ -479,14 +488,11 @@ public class GeneticEngine {
         Double falseNegative = 0.0;
         Double falsePositive = 0.0;
 
-
-        population.add( buildEmptyChromossome() );
-        
         for ( Sentence sentence : testSentences ) {
 
             boolean defaultValue = true;
 
-            for ( int i = 0; i < population.size(); i++ ) {
+            for ( int i = 0; i < POPULATION_SIZE; i++ ) {
                 Chromossome chromossome = population.get( i );
                 
                 /*if ( antecedent( chromossome, sentence ) ) {

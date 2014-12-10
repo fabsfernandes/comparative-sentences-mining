@@ -25,7 +25,7 @@ public class CSRBuilder {
         printResults( rules, init );
     }
     
-    public void generateFileForClassifier( List<ClassSequentialRule> rules, List<Sentence> sentences ) {
+    public void generateFileForClassifier( List<ClassSequentialRule> rules, List<Sentence> sentences ) throws Exception {
         
         ArffFileGenerator generator = new ArffFileGenerator();
         generator.generateArffFile( rules, sentences );

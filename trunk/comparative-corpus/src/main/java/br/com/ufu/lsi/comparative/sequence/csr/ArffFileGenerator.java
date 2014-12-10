@@ -1,9 +1,11 @@
 
 package br.com.ufu.lsi.comparative.sequence.csr;
 
+import java.io.BufferedWriter;
 import java.util.List;
 
 import br.com.ufu.lsi.comparative.model.Sentence;
+import br.com.ufu.lsi.comparative.util.FileUtil;
 import br.com.ufu.lsi.comparative.util.PropertiesUtil;
 
 public class ArffFileGenerator {
@@ -15,8 +17,10 @@ public class ArffFileGenerator {
     private static final String COMPARATIVE_CLASS = PropertiesUtil.getProperty( "COMPARATIVE_CLASS" );
 
     private static final String NOT_COMPARATIVE_CLASS = PropertiesUtil.getProperty( "NOT_COMPARATIVE_CLASS" );
+    
+    private static final String ARFF_FILE = PropertiesUtil.getProperty( "ARFF_FILE" );
 
-    public void generateArffFile( List< ClassSequentialRule > rules, List< Sentence > sentences ) {
+    public void generateArffFile( List< ClassSequentialRule > rules, List< Sentence > sentences ) throws Exception {
 
         StringBuilder builder = new StringBuilder();
 
@@ -28,6 +32,9 @@ public class ArffFileGenerator {
         
         builder.append( generateData( rules, sentences ) );
 
+        BufferedWriter bw = FileUtil.openOutputFile( ARFF_FILE );
+        bw.write( builder.toString() );
+        bw.close();
         System.out.println( builder.toString() );
     }
 

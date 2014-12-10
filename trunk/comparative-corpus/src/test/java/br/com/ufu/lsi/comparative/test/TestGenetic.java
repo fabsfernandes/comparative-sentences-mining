@@ -8,7 +8,7 @@ import br.com.ufu.lsi.comparative.ga.model.Chromossome;
 
 public class TestGenetic {
 
-    @Test
+    //@Test
     public void testChrom(){
         GeneticEngine engine = new GeneticEngine();
         
@@ -19,5 +19,12 @@ public class TestGenetic {
         Chromossome chromossome2 = SerializationUtils.clone( chromossome );
         
         System.out.println( chromossome.equals( chromossome2 ));
+    }
+    
+    @Test
+    public void testGeneric(){
+        
+        
+        
     }
 }
