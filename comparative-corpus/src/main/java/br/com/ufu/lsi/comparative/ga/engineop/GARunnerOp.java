@@ -1,5 +1,5 @@
 
-package br.com.ufu.lsi.comparative.ga.engine;
+package br.com.ufu.lsi.comparative.ga.engineop;
 
 import java.util.List;
 
@@ -7,28 +7,28 @@ import br.com.ufu.lsi.comparative.ga.model.Chromossome;
 import br.com.ufu.lsi.comparative.ga.model.Stats;
 import br.com.ufu.lsi.comparative.model.Sentence;
 
-public class GARunner {
+public class GARunnerOp {
 
     private static final Double TRAIN_PROPORTION = 0.8;
 
     public List<Stats> runGeneticEngine( List< Sentence > sentences ) {
 
-        GeneticEngine engine = new GeneticEngine();
+        GeneticEngineOp engineOp = new GeneticEngineOp();
 
         List< Sentence > trainSentences = getTrainSentences( sentences );
-        List< Chromossome > population = engine.generateInitialPopulation( trainSentences );
-        engine.evolvePopulation( population, trainSentences );
+        List< Chromossome > population = engineOp.generateInitialPopulation( trainSentences );
+        engineOp.evolvePopulation( population, trainSentences );
 
         printPopulation( population );
         printDatabaseStats( trainSentences, sentences );
         
-        List<Stats> stats = testResult( sentences, population, trainSentences.size(), engine );
+        List<Stats> stats = testResult( sentences, population, trainSentences.size(), engineOp );
 
         return stats;
     }
 
     public List<Stats> testResult( List< Sentence > sentences, List< Chromossome > population,
-            int indexInit, GeneticEngine engine ) {
+            int indexInit, GeneticEngineOp engine ) {
 
         List< Sentence > testSentences = sentences.subList( indexInit, sentences.size() );
 

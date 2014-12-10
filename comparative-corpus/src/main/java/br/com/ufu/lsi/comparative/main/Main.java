@@ -1,13 +1,12 @@
 package br.com.ufu.lsi.comparative.main;
 
-import java.util.Arrays;
 import java.util.List;
 
-import br.com.ufu.lsi.comparative.ga.engine.GARunner;
+import br.com.ufu.lsi.comparative.ga.engineop.GARunnerOp;
+import br.com.ufu.lsi.comparative.ga.model.Stats;
 import br.com.ufu.lsi.comparative.model.Sentence;
 import br.com.ufu.lsi.comparative.sentence.SentenceHandler;
 import br.com.ufu.lsi.comparative.sentence.SentenceNLP;
-import br.com.ufu.lsi.comparative.sequence.engine.SequenceBuilder;
 import br.com.ufu.lsi.comparative.util.PropertiesUtil;
 
 public class Main {
@@ -23,26 +22,30 @@ public class Main {
         List<Sentence> pivotedSentences = main.buildSentences();
         
         // csr approach
-        SequenceBuilder sequenceBuilder = new SequenceBuilder();
-        sequenceBuilder.buildSequences( pivotedSentences );
+        //SequenceBuilder sequenceBuilder = new SequenceBuilder();
+        //sequenceBuilder.buildSequences( pivotedSentences );
         
         // csr approach part 2
         // run via csrbuilder
 
-        printResults( pivotedSentences, init  );
+        //printResults( pivotedSentences, init  );
         
         // ga approach
         //GARunner runner = new GARunner();
-        //runner.runGeneticEngine( pivotedSentences );
+        //List<Stats> statistics = runner.runGeneticEngine( pivotedSentences );
         
+        // ga op approach
+        GARunnerOp runnerOp = new GARunnerOp();
+        List<Stats> statistics = runnerOp.runGeneticEngine( pivotedSentences );
         
-
+        printStatsResults( statistics, init );
+        
     }
     
     public List<Sentence> buildSentences() throws Exception {
         
         List< Sentence > sentences = loadSentences();
-        ;;removeStopWords( sentences );
+        //removeStopWords( sentences );
         postagSentences( sentences );
         List< Sentence > pivotedSentences = pivotSentences( sentences );
         
@@ -91,6 +94,8 @@ public class Main {
     }
 
     /**
+     * pos tag sentences - heavy process 
+     * 
      * @param sentences
      * @return
      */
@@ -101,7 +106,7 @@ public class Main {
     }
 
     /**
-     * Just print for debug purposes
+     * Just print for test purposes
      */
     public static void printResults( List< Sentence > pivotedSentences,
             long init ) {
@@ -114,6 +119,41 @@ public class Main {
         System.out.println( "STATS" );
         //System.out.println( "Database size = " + databaseSize );
         System.out.println( "Pivoted sentences = " + pivotedSentences.size() );
+        System.out.println( "Time = " + ( System.currentTimeMillis() - init ) + "ms" );
+    }
+    
+    
+    /**
+     * Just print for test purposes    
+     */
+    public static void printStatsResults( Stats statistics, long init ) {
+        System.out.println( "\n===== GA RESULTS ==== ");
+        System.out.println( statistics );
+        System.out.println( "Time = " + ( System.currentTimeMillis() - init ) + "ms" );
+    }
+    
+    /**
+     * Just print for test purposes    
+     */
+    public static void printStatsResults( List<Stats> statistics, long init ) {
+        System.out.println( "\n===== GA RESULTS ==== ");
+        Double precision = 0.0;
+        Double recall = 0.0;
+        Double fScore = 0.0;
+        Double accuracy = 0.0;
+        
+        for( Stats stats : statistics ) {
+            
+            precision += stats.getPrecision();
+            recall += stats.getRecall();
+            fScore += stats.getfScore();
+            accuracy += stats.getAccuracy();
+        }
+        
+        System.out.println("Precision = " + precision / statistics.size() );
+        System.out.println("Recall = " + recall / statistics.size() );
+        System.out.println("FScore = " + fScore / statistics.size() );
+        System.out.println("Accuracy = " + accuracy / statistics.size() );
         System.out.println( "Time = " + ( System.currentTimeMillis() - init ) + "ms" );
     }
 }

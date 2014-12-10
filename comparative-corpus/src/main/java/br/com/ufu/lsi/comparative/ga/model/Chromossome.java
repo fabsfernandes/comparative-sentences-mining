@@ -1,7 +1,9 @@
 package br.com.ufu.lsi.comparative.ga.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class Chromossome implements Serializable, Comparable {
@@ -39,6 +41,29 @@ public class Chromossome implements Serializable, Comparable {
         
         return builder.toString();
     }
+    
+    public int getLength() {
+        int cont = 0;
+        for( Gene gene : genes ) {
+            if( !gene.getIsClass() ) {
+                if( gene.getValue().charAt( 0 ) == '1' )
+                    cont++;
+            }
+        }
+        return cont;
+    }
+    
+    public List<String> getActiveGenes(){
+        List<String> list = new ArrayList< String >();
+        for( Gene gene : genes ) {
+            if( !gene.getIsClass() ) {
+                if( gene.getValue().charAt( 0 ) == '1' )
+                    list.add( gene.getValue() );
+            }
+        }
+        list.add( genes[genes.length-1].getValue() );
+        return list;
+    }
 
     @Override
     public int compareTo( Object o ) {
@@ -67,8 +92,16 @@ public class Chromossome implements Serializable, Comparable {
         if ( getClass() != obj.getClass() )
             return false;
         Chromossome other = ( Chromossome ) obj;
-        if ( ! Arrays.equals( genes, other.genes ) )
+        
+        /*if ( ! Arrays.equals( genes, other.genes ) )
+            return false;*/
+        
+        List<String> thisList = getActiveGenes();
+        List<String> otherList = other.getActiveGenes();
+        
+        if( !thisList.equals( otherList ) )
             return false;
+        
         return true;
     }
 
