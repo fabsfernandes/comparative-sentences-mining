@@ -1,0 +1,1 @@
+Mining comparative sentences from different corpus with 3 different techniques: genetic algorithm, neural network and sequence pattern mining.
